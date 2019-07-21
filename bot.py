@@ -47,7 +47,7 @@ def hook():
     current_chat_id = bot.get_chat_id(update)
     sent_message = update['message']['text']
     update_id = update['update_id']
-    if update_id == bot.update_id or bot.update_id == -1:
+    if update_id >= bot.update_id or bot.update_id == -1:
         bot.send_message(current_chat_id, sent_message)
         bot.update_id += 1
     return BaseResponse(status=200)
