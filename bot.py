@@ -10,6 +10,7 @@ class Bot:
     def __init__(self, token):
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
+        self.update_id = -1
 
     def get_updates_json(self, req):
         params = {'timeout': 100, 'offset': None}
@@ -45,7 +46,10 @@ def hook():
     update = request.json
     current_chat_id = bot.get_chat_id(update)
     sent_message = update['message']['text']
-    bot.send_message(current_chat_id, sent_message)
+    update_id = update['update_id']
+    if update_id == bot.update_id or bot.update_id == -1:
+        bot.send_message(current_chat_id, sent_message)
+        bot.update_id += 1
     return BaseResponse(status=200)
 
 
