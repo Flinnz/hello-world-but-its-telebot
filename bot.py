@@ -42,7 +42,7 @@ bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
 
 @post('/bot')
 def hook():
-    update = request.POST
+    update = request.json
     current_chat_id = bot.get_chat_id(update)
     sent_message = update['message']['text']
     bot.send_message(current_chat_id, sent_message)
