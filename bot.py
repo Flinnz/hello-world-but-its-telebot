@@ -37,10 +37,10 @@ class Bot:
 
 
 bot = Bot(my_bot_token)
-bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/" + my_bot_token)
+bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
 
 
-@post('/' + my_bot_token)
+@post('/bot')
 def hook():
     update = request.POST
     current_chat_id = bot.get_chat_id(update)
