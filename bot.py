@@ -1,40 +1,60 @@
+import os
+
 import requests
-from time import sleep
+from bottle import route, run, post, request, response, BaseResponse
 
-url = "https://api.telegram.org/bot763184867:AAE5SQ_RSK082iU1LDM6i5U2-1dk6nOnSjQ/"
-
-
-def get_updates_json(request):
-    params = {'timeout': 100, 'offset': None}
-    response = requests.get(request + 'getUpdates', params)
-    return response.json()
+my_bot_token = os.environ.get('BOT_KEY')
 
 
-def last_update(data):
-    results = data['result']
-    last_update_index = len(results) - 1
-    return results[last_update_index]
+class Bot:
+    def __init__(self, token):
+        self.token = token
+        self.api_url = "https://api.telegram.org/bot{}/".format(token)
+
+    def get_updates_json(self, req):
+        params = {'timeout': 100, 'offset': None}
+        resp = requests.get(req + 'getUpdates', params)
+        return resp.json()
+
+    def last_update(self, data):
+        results = data['result']
+        last_update_index = len(results) - 1
+        return results[last_update_index]
+
+    def set_webhook(self, webhook_url):
+        params = {'url': webhook_url}
+        resp = requests.post(self.api_url + "setWebhook", data=params)
+        return resp
+
+    def get_chat_id(self, update):
+        chat_id = update['message']['chat']['id']
+        return chat_id
+
+    def send_message(self, chat_id, text):
+        params = {'chat_id': chat_id, 'text': text}
+        resp = requests.post(self.api_url + 'sendMessage', data=params)
+        return resp
 
 
-def get_chat_id(update):
-    chat_id = update['message']['chat']['id']
-    return chat_id
+bot = Bot(my_bot_token)
+bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/" + my_bot_token)
 
 
-def send_message(chat_id, text):
-    params = {'chat_id': chat_id, 'text': text}
-    response = requests.post(url + 'sendMessage', data=params)
-    return response
+@post('/' + my_bot_token)
+def hook():
+    update = request.POST
+    current_chat_id = bot.get_chat_id(update)
+    sent_message = update['message']['text']
+    bot.send_message(current_chat_id, sent_message)
+    return BaseResponse(status=200)
 
 
-def main():
-    update_id = last_update(get_updates_json(url))['update_id']
-    while True:
-        if update_id == last_update(get_updates_json(url))['update_id']:
-            send_message(get_chat_id(last_update(get_updates_json(url))), 'test')
-            update_id += 1
-        sleep(100)
-
+if 'PORT' in os.environ:
+    port = int(os.environ.get('PORT'))
+    host = '0.0.0.0'
+else:
+    port = 5000
+    host = '127.0.0.1'
 
 if __name__ == '__main__':
-    main()
+    run(host=host, port=port)
