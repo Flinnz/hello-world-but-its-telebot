@@ -50,9 +50,8 @@ def hook():
         sent_message = sent_message[0:len(sent_message) - 1] + '.'
     if sent_message.lower() == 'анекдот':
         sent_message = '''- С женщинами надо говорить намёками, а не прямо и грубо. 
-                          - А как, например?
-                          - Ну, например: "Так, здесь лёд, осторожно, а то подскользнёмся и как трахнемся! 
-                            Кстати, хочешь потрахаться?"'''
+- А как, например?
+- Ну, например: "Так, здесь лёд, осторожно, а то подскользнёмся и как трахнемся! Кстати, хочешь потрахаться?"'''
     update_id = update['update_id']
     if update_id >= bot.update_id or bot.update_id == -1:
         bot.send_message(current_chat_id, sent_message)
