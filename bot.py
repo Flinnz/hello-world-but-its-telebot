@@ -49,7 +49,9 @@ def hook():
     current_chat_id = bot.get_chat_id(update)
     sent_message = update['message']['text']
     validation = re.compile(r'[?]$')
-    if validation.match(sent_message) is not None:
+    match = validation.match(sent_message)
+    print(match)
+    if match is not None:
         sent_message = sent_message[0:len(sent_message) - 1] + '.'
         print('match')
     print(sent_message)
