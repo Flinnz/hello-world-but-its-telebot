@@ -48,13 +48,9 @@ def hook():
     update = request.json
     current_chat_id = bot.get_chat_id(update)
     sent_message = update['message']['text']
-    validation = re.compile(r'[?]$')
-    match = validation.match(sent_message)
-    print(match)
-    if match is not None:
+    if sent_message[-1] == '?':
         sent_message = sent_message[0:len(sent_message) - 1] + '.'
         print('match')
-    print(sent_message)
     update_id = update['update_id']
     if update_id >= bot.update_id or bot.update_id == -1:
         bot.send_message(current_chat_id, sent_message)
