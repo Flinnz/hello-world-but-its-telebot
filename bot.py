@@ -48,7 +48,7 @@ def hook():
     current_chat_id = bot.get_chat_id(update)
     sent_message = update['message']['text']
     validation = re.compile(r'[п][о][м][о][щ][ь]')
-    if sent_message.match(validation):
+    if validation.match(sent_message):
         sent_message = 'Сам себе помоги'
     elif sent_message[-1] == '?':
         sent_message = sent_message[0:len(sent_message) - 1] + '.'
