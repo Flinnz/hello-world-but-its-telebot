@@ -41,6 +41,9 @@ class Bot:
 bot = Bot(my_bot_token)
 bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
 
+@post('/viberCallback')
+def callback():
+    return BaseResponse(status=200)
 
 @post('/bot')
 def hook():
