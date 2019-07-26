@@ -1,10 +1,7 @@
 import os
 import re
-
 import requests
 from bottle import run, post, request, BaseResponse
-
-my_bot_token = os.environ.get('BOT_KEY')
 
 
 class Bot:
@@ -13,24 +10,10 @@ class Bot:
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
         self.update_id = -1
 
-    def get_updates_json(self, req):
-        params = {'timeout': 100, 'offset': None}
-        resp = requests.get(req + 'getUpdates', params)
-        return resp.json()
-
-    def last_update(self, data):
-        results = data['result']
-        last_update_index = len(results) - 1
-        return results[last_update_index]
-
     def set_webhook(self, webhook_url):
         params = {'url': webhook_url}
         resp = requests.post(self.api_url + "setWebhook", data=params)
         return resp
-
-    def get_chat_id(self, update):
-        chat_id = update['message']['chat']['id']
-        return chat_id
 
     def send_message(self, chat_id, text):
         params = {'chat_id': chat_id, 'text': text}
@@ -38,24 +21,23 @@ class Bot:
         return resp
 
 
+my_bot_token = os.environ.get('BOT_KEY')
 bot = Bot(my_bot_token)
 bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
+help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.IGNORECASE)
 
 
 @post('/bot')
 def hook():
     update = request.json
-    current_chat_id = bot.get_chat_id(update)
+    current_chat_id = update['message']['chat']['id']
     sent_message = update['message']['text']
-    validation = re.compile(r'[п][о][м][о][щ][ь]')
-    if validation.match(sent_message):
+    if re.match(help_regex, sent_message):
         sent_message = 'Сам себе помоги'
     elif sent_message[-1] == '?':
         sent_message = sent_message[0:len(sent_message) - 1] + '.'
     elif sent_message.lower() == 'анекдот':
-        sent_message = '''- С женщинами надо говорить намёками, а не прямо и грубо. 
-- А как, например?
-- Ну, например: "Так, здесь лёд, осторожно, а то подскользнёмся и как трахнемся! Кстати, хочешь потрахаться?"'''
+        sent_message = 'тут был плохой анек'
     update_id = update['update_id']
     if update_id >= bot.update_id or bot.update_id == -1:
         bot.send_message(current_chat_id, sent_message)
