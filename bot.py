@@ -26,6 +26,9 @@ bot = Bot(my_bot_token)
 bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
 help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.IGNORECASE)
 
+@post('/viberCallback')
+def callback():
+    return BaseResponse(status=200)
 
 @post('/bot')
 def hook():
