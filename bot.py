@@ -31,7 +31,7 @@ updates = []
 
 
 @get('/getViberUpdates')
-def get_updates():
+def updates():
     return json.dumps(updates)
 
 @post('/viberCallback')
