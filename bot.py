@@ -30,7 +30,7 @@ help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.
 updates = []
 
 
-@get('/get_updates')
+@post('/get_updates')
 def updates():
     return json.dumps(updates)
 
