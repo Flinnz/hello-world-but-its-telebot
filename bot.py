@@ -1,7 +1,8 @@
 import os
 import re
 import requests
-from bottle import run, post, request, BaseResponse
+import json
+from bottle import run, post, get, request, BaseResponse
 
 
 class Bot:
@@ -24,10 +25,18 @@ class Bot:
 my_bot_token = os.environ.get('BOT_KEY')
 bot = Bot(my_bot_token)
 bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
-help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.IGNORECASE)
+help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.
+
+updates = []
+
+
+@get('/getViberUpdates')
+def get_updates():
+    return json.dumps(updates)
 
 @post('/viberCallback')
 def callback():
+    updates.append(request.json)
     return BaseResponse(status=200)
 
 @post('/bot')
