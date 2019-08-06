@@ -31,7 +31,7 @@ updates = []
 
 
 @post('/get_updates')
-def updates():
+def get_updates():
     return json.dumps(updates)
 
 
