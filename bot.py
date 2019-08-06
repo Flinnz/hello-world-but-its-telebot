@@ -29,12 +29,6 @@ help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.
 
 updates = []
 
-
-@post('/get_updates')
-def get_updates():
-    return json.dumps(updates)
-
-
 @post('/viberCallback')
 def callback():
     updates.append(request.json)
