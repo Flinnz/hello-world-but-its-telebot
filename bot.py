@@ -31,11 +31,15 @@ updates = []
 
 @get('/updates')
 def get_updates():
-    return json.dumps(updates)
+    temp_updates = updates
+    updates = []
+    return json.dumps(temp_updates)
 
 @post('/viberCallback')
 def callback():
-    updates.append(request.json)
+    update = request.json
+    if update['event_type'] == 'message':
+        updates.append(request.json)
     return BaseResponse(status=200)
 
 @post('/bot')
