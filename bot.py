@@ -25,7 +25,7 @@ class Bot:
 my_bot_token = os.environ.get('BOT_KEY')
 bot = Bot(my_bot_token)
 bot.set_webhook("https://hello-world-but-its-a-telebot.herokuapp.com/bot")
-help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.
+help_regex = re.compile(r'[п][о][м][о][щ][ь]', re.IGNORECASE)
 
 updates = []
 
